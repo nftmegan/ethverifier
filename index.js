@@ -77,13 +77,13 @@ const AddToList = async (message, list, memberId, address) => {
     list + ".json", JSON.stringify(arr, null, 4));
 
   if(!existing) {
-    var msg = "You successfully whitelisted your address on the " + (list === "oglist" ? "OG Elites Whitelist." : "Pre-Sale Whitelist") + ".";
+    var msg = "You successfully whitelisted your address on the " + (list === "oglist" ? "OG Elites Whitelist" : "Pre-Sale Whitelist") + ".";
     message.reply({
       content: msg,
     })
   }
   else {
-    var msg = "You succesfully updated your whitelisted address on the " + (list === "oglist" ? "OG Elites Whitelist." : "Pre-Sale Whitelist") + ".";
+    var msg = "You succesfully updated your whitelisted address on the " + (list === "oglist" ? "OG Elites Whitelist" : "Pre-Sale Whitelist") + ".";
     message.reply({
       content: msg,
     })
