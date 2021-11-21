@@ -1,4 +1,4 @@
-const prefix = ".";
+const prefix = "/";
 
 require('dotenv').config()
 
@@ -27,34 +27,34 @@ bot.on('messageCreate', (message) => {
   const cmd = args[0].slice(prefix.length).toLowerCase(); // case INsensitive, without prefix
 
   if (cmd === 'add') {
-    if (message.member.roles.cache.some(role => role.name === 'Cactus')) {
-      var is = web3.utils.isAddress(args[1]);
+    var is = web3.utils.isAddress(args[1]);
 
-      var add = web3.utils.toChecksumAddress(args[1]);
-
-      if(is) {
-        UpdateList(message, message.member.user.id, add);
-      }
-      else {
-        message.reply({
-          content: 'Invalid address, try submitting another.',
-        })
-      }
-    }
-    else {
+    if(!is) {
       message.reply({
-        content: "I'm sorry",
-    })}
+        content: 'Invalid address. Only use eth addresses.',
+      })
+      return;
+    }
+
+    var addr = web3.utils.toChecksumAddress(args[1]);
+
+    if (message.member.roles.cache.some(role => role.id == 871083305422979143)) {
+      AddToList(message, "oglist", message.member.user.id, addr);
+    }
+
+    if (message.member.roles.cache.some(role => role.id == 871081562895163403)) {
+      AddToList(message, "presale", message.member.user.id, addr);
+    }
   }
-})
+});
 
 
-const UpdateList = async (message, newMemberId, newAddress) => {
-  var dict = [];
+const AddToList = async (message, list, memberId, address) => {
+  var arr = [];
 
-  await fs.promises.readFile("oglist.json")
+  await fs.promises.readFile(list + ".json")
   .then(function(result) {
-    dict = JSON.parse(result);
+    arr = JSON.parse(result);
   })
   .catch(function(error) {
     console.log(error);
@@ -62,29 +62,32 @@ const UpdateList = async (message, newMemberId, newAddress) => {
 
   var existing = false;
 
-  for(var i = 0; i < dict.length; i++) {
-    if(dict[i].member == newMemberId) {
-      dict[i].address = newAddress;
+  for(var i = 0; i < arr.length; i++) {
+    if(arr[i].member == memberId) {
+      arr[i].address = address;
       existing = true;
     }
   }
 
-  if(!existing)
-    dict.push({member: newMemberId, address: newAddress});
-
   if(!existing) {
-    message.reply({
-      content: 'Valid address. Welcome to the ELITES!',
-    })
-  }
-  else {
-    message.reply({
-      content: 'You successfully updated your address.',
-    })
+    arr.push({member: memberId, address: address});
   }
 
   await fsPromises.writeFile(
-    "oglist.json", JSON.stringify(dict, null, 4));
+    list + ".json", JSON.stringify(arr, null, 4));
+
+  if(!existing) {
+    var msg = "You successfully whitelisted your address on the " + (list === "oglist" ? "OG Elites Whitelist." : "Pre-Sale Whitelist") + ".";
+    message.reply({
+      content: msg,
+    })
+  }
+  else {
+    var msg = "You succesfully updated your whitelisted address on the " + (list === "oglist" ? "OG Elites Whitelist." : "Pre-Sale Whitelist") + ".";
+    message.reply({
+      content: msg,
+    })
+  }
 
   return existing;
 }
