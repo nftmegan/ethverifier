@@ -83,7 +83,7 @@ const AddToList = async (message, list, memberId, address) => {
     })
   }
   else {
-    var msg = "You succesfully updated your whitelisted address on the " + (list === "oglist" ? "OG Elites Whitelist" : "Pre-Sale Whitelist") + ".";
+    var msg = "You successfully updated your whitelisted address on the " + (list === "oglist" ? "OG Elites Whitelist" : "Pre-Sale Whitelist") + ".";
     message.reply({
       content: msg,
     })
