@@ -26,7 +26,7 @@ bot.on('messageCreate', (message) => {
   const args = message.content.trim().split(/ +/g);
   const cmd = args[0].slice(prefix.length).toLowerCase(); // case INsensitive, without prefix
 
-  if (cmd === 'add') {
+  if (cmd === 'eth') {
     var is = web3.utils.isAddress(args[1]);
 
     if(!is) {
