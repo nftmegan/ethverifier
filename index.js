@@ -1,4 +1,4 @@
-const prefix = "/";
+const prefix = "!";
 
 require('dotenv').config()
 
